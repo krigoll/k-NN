@@ -25,7 +25,8 @@ public class Knn {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        debug();
+        doKnn();
+        //debug();
     }
 
     private void input() throws FileNotFoundException {
@@ -60,6 +61,23 @@ public class Knn {
 
             testData.add(new Data(label,vector));
         }
+    }
+
+    private void doKnn() {
+        int countTrue = 0;
+        for (Data test : testData) {
+            for (Data train : trainData) {
+                double eq = test.calcEuq(train.getVector());
+                String label = train.getLabel();
+                test.addResult(label,eq);
+            }
+            test.kNNResult(k);
+            if (test.kNNResult(k)) {
+                countTrue++;
+            }
+        }
+
+        System.out.println((double) (countTrue)/(double)(testData.size())*100+"%");
     }
 
     private void debug() {
