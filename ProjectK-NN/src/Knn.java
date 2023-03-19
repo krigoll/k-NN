@@ -4,6 +4,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Knn {
 
@@ -12,6 +13,7 @@ public class Knn {
     private BufferedReader testBuffer;
     private List<Data> trainData;
     private List<Data> testData;
+    private int vectorSize;
 
     public Knn (int k) {
         this.k = k;
@@ -26,7 +28,6 @@ public class Knn {
             e.printStackTrace();
         }
         doKnn();
-        //debug();
     }
 
     private void input() throws FileNotFoundException {
@@ -61,6 +62,10 @@ public class Knn {
 
             testData.add(new Data(label,vector));
         }
+
+        if (trainData.size() != 0) {
+            vectorSize = trainData.get(0).getVector().length;
+        }
     }
 
     private void doKnn() {
@@ -71,8 +76,7 @@ public class Knn {
                 String label = train.getLabel();
                 test.addResult(label,eq);
             }
-            test.kNNResult(k);
-            if (test.kNNResult(k)) {
+            if (test.kNNResult(k,true)) {
                 countTrue++;
             }
         }
@@ -80,13 +84,46 @@ public class Knn {
         System.out.println((double) (countTrue)/(double)(testData.size())*100+"%");
     }
 
-    private void debug() {
-        for (Data data : trainData) {
-            System.out.println(data.getLabel());
-            for (int i = 0; i < data.getVector().length; i++) {
-                System.out.print(data.getVector()[i]+ " ");
+    public void enterVector() {
+        boolean isActive = true;
+        Scanner scanner = new Scanner(System.in);
+        Scanner scannerVector = new Scanner(System.in);
+        int option = 0;
+        testData.clear();
+        while (isActive) {
+            System.out.println("1. Wprowadz wektor");
+            System.out.println("2. Sprawdz");
+            option = scanner.nextInt();
+            if (option == 2) {
+                if (testData.size() == 0) {
+                    System.out.println("Brak wektorow!");
+                } else {
+                    getResults();
+                }
+                isActive = false;
+            } else if (option == 1) {
+                System.out.println("Podaj wektor o wielkosci " + vectorSize + ". Oddziel pojednycze liczby spacja.");
+                String [] vectorString = scannerVector.nextLine().split(" ");
+                double [] vector = new double[vectorString.length];
+                for (int i = 0; i < vector.length; i++) {
+                    vector[i] = Double.parseDouble(vectorString[i]);
+                }
+                testData.add(new Data(null, vector));
+                System.out.println("Wektor dodany!");
+            } else {
+                System.out.println("Zla opcja!");
             }
-            System.out.println();
+        }
+    }
+
+    private void getResults() {
+        for (Data test : testData) {
+            for (Data train : trainData) {
+                double eq = test.calcEuq(train.getVector());
+                String label = train.getLabel();
+                test.addResult(label, eq);
+            }
+            test.kNNResult(k,false);
         }
     }
 

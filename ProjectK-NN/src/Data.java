@@ -28,7 +28,7 @@ public class Data {
         return resultList;
     }
 
-    public boolean kNNResult(int k) {
+    public boolean kNNResult(int k, boolean training) {
         Map<String,Integer> resultMap = new HashMap<>();
         resultList.sort(new Comparator<Result>() {
             @Override
@@ -54,13 +54,27 @@ public class Data {
             }
         }
 
-        System.out.println("Najwiecej jest: " + max);
-        System.out.println("Etykieta: " + label);
-        System.out.println("Czy poprawna: " + this.label.equals(label));
+        if (training) {
+            System.out.println("Najwiecej jest: " + max);
+            System.out.println("Etykieta: " + label);
+            System.out.println("Czy poprawna: " + this.label.equals(label));
 
-        return this.label.equals(label);
+            return this.label.equals(label);
+        } else {
+            System.out.println("Dal wektora: ");
+            for (double value : vector) {
+                System.out.print(value + " ");
+            }
+            System.out.println();
+            System.out.println("Wybarana etykieta: " + label);
+            return false;
+        }
+
+
 
     }
+
+
 
     public String getLabel() {
         return label;
