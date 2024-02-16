@@ -1,2 +1,2 @@
 # k-NN
-Program dokonuje klasyfikacji k-NN wszystkich obserwacji z pliku testowego na podstawie pliku treningowego oraz podać dokladność tej klasyfikacji (proporcję poprawnie zaklasyfikowanych przykładów testowych).
+The program performs k-NN classification of all observations from the test file based on the training file, and provide the accuracy of this classification (proportion of correctly classified test examples).
